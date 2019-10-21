@@ -6,6 +6,7 @@ module.exports = function(X, U, rootX, finishX) {
         parent: null,
         way: 0,
     };
+    X[rootX.toString()] = 0;
 
     function isAlreadyInTree(name, parent) {
         let now = parent;
@@ -24,19 +25,25 @@ module.exports = function(X, U, rootX, finishX) {
 
         U.forEach((Uelem) => {
             if(Uelem.e1 === element.name && isAlreadyInTree(Uelem.e2.toString(), element) === false) {
-                element.arr.push({
-                    name: Uelem.e2.toString(),
-                    parent: element,
-                    way: element.way + Uelem.d,
-                });
+                if(X[Uelem.e2.toString()] > element.way + Uelem.d) {
+                    element.arr.push({
+                        name: Uelem.e2.toString(),
+                        parent: element,
+                        way: element.way + Uelem.d,
+                    });
+                    X[Uelem.e2.toString()] = element.way + Uelem.d;
+                }
             }
 
             if(Uelem.e2 === element.name && isAlreadyInTree(Uelem.e1.toString(), element) === false) {
-                element.arr.push({
-                    name: Uelem.e1.toString(),
-                    parent: element,
-                    way: element.way + Uelem.d,
-                });
+                if(X[Uelem.e1.toString()] > element.way + Uelem.d) {
+                    element.arr.push({
+                        name: Uelem.e1.toString(),
+                        parent: element,
+                        way: element.way + Uelem.d,
+                    });
+                    X[Uelem.e1.toString()] = element.way + Uelem.d;
+                }
             }
         });
 
@@ -45,8 +52,10 @@ module.exports = function(X, U, rootX, finishX) {
                minWay = element.way;
                endElement = element;
            }
-           return;
+           return null;
         }
+
+        if(parseInt(minWay) <= parseInt(element.way)) return;
 
         element.arr.forEach((child) => {
             addChildren(child);
@@ -59,8 +68,8 @@ module.exports = function(X, U, rootX, finishX) {
 
     while(endElement) {
         resultArray.push({
-            Px: parseInt(endElement.name.toString().split("***")[1]),
-            Py: parseInt(endElement.name.toString().split("***")[2]),
+            Px: parseInt(endElement.name.toString().split("=")[1]),
+            Py: parseInt(endElement.name.toString().split("=")[2]),
         });
         endElement = endElement.parent;
     }

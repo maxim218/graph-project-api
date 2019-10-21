@@ -21,15 +21,27 @@ module.exports = function(bodyObject) {
     dictionary = vertexDictionary(points);
     dictionary = JSON.parse(JSON.stringify(dictionary));
 
-    const UUU = getUarr(dictionary, waysArr);
+    const U = getUarr(dictionary, waysArr);
 
-    const X = dictionary;
-    const U = UUU;
-    const rootX = "point" + "***" + parseInt(pointA.Px) + "***" + parseInt(pointA.Py);
-    const finishX = "point" + "***" + parseInt(pointB.Px) + "***" + parseInt(pointB.Py);
+    const rootX = "p" + "=" + parseInt(pointA.Px) + "=" + parseInt(pointA.Py);
+    const finishX = "p" + "=" + parseInt(pointB.Px) + "=" + parseInt(pointB.Py);
+
+    const X = {};
+
+    for(let key in dictionary) {
+        const Px = parseInt(key.split("***")[1]);
+        const Py = parseInt(key.split("***")[2]);
+        const newKey = "p" + "=" + Px + "=" + Py;
+        X[newKey] = 9999999999999;
+    };
+
+    console.log("rootX: " + rootX);
+    console.log("finishX: " + finishX);
+    console.log(JSON.stringify(X, null, 4));
+    console.log(JSON.stringify(U, null, 4));
 
     const resultArray = getResultPointsArray(
-        JSON.parse(JSON.stringify(X)), 
+        JSON.parse(JSON.stringify(X)),
         JSON.parse(JSON.stringify(U)), 
         rootX.toString(),
         finishX.toString()
